@@ -9,7 +9,7 @@ namespace Cinema.Models
     {
         public int ID { get; set; }
         public Viewing Viewing { get; set; }
-        public Row Row { get; set; }
-        public Seat Seat { get; set; }
+        public Salon Salon { get; set; }
+        public int Seat { get; set; }
     }
 }

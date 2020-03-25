@@ -12,23 +12,26 @@ namespace Cinema.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ViewingsController : ControllerBase
+    public class ViewingController : ControllerBase
     {
         private readonly CinemaContext _context;
 
-        public ViewingsController(CinemaContext context)
+        public ViewingController(CinemaContext context)
         {
             _context = context;
         }
 
-        // GET: api/Viewings
+        // GET: api/Viewing
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Viewing>>> GetViewings()
         {
-            return await _context.Viewings.ToListAsync();
+            return await _context.Viewings
+                .Include(v => v.Film)
+                .Include(v => v.Salon)
+                .ToListAsync();
         }
 
-        // GET: api/Viewings/5
+        // GET: api/Viewing/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Viewing>> GetViewing(int id)
         {
@@ -42,7 +45,7 @@ namespace Cinema.Controllers
             return viewing;
         }
 
-        // PUT: api/Viewings/5
+        // PUT: api/Viewing/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -74,7 +77,7 @@ namespace Cinema.Controllers
             return NoContent();
         }
 
-        // POST: api/Viewings
+        // POST: api/Viewing
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
@@ -86,7 +89,7 @@ namespace Cinema.Controllers
             return CreatedAtAction("GetViewing", new { id = viewing.ID }, viewing);
         }
 
-        // DELETE: api/Viewings/5
+        // DELETE: api/Viewing/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Viewing>> DeleteViewing(int id)
         {

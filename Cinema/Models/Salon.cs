@@ -9,6 +9,6 @@ namespace Cinema.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public ICollection<Row> Rows { get; set; }
+        public int Seats { get; set; }
     }
 }

@@ -12,48 +12,48 @@ namespace Cinema.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FilmsController : ControllerBase
+    public class TicketController : ControllerBase
     {
         private readonly CinemaContext _context;
 
-        public FilmsController(CinemaContext context)
+        public TicketController(CinemaContext context)
         {
             _context = context;
         }
 
-        // GET: api/Films
+        // GET: api/Ticket
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Film>>> GetFilms()
+        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
         {
-            return await _context.Films.ToListAsync();
+            return await _context.Tickets.ToListAsync();
         }
 
-        // GET: api/Films/5
+        // GET: api/Ticket/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Film>> GetFilm(int id)
+        public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
-            var film = await _context.Films.FindAsync(id);
+            var ticket = await _context.Tickets.FindAsync(id);
 
-            if (film == null)
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            return film;
+            return ticket;
         }
 
-        // PUT: api/Films/5
+        // PUT: api/Ticket/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFilm(int id, Film film)
+        public async Task<IActionResult> PutTicket(int id, Ticket ticket)
         {
-            if (id != film.ID)
+            if (id != ticket.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(film).State = EntityState.Modified;
+            _context.Entry(ticket).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace Cinema.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FilmExists(id))
+                if (!TicketExists(id))
                 {
                     return NotFound();
                 }
@@ -74,37 +74,37 @@ namespace Cinema.Controllers
             return NoContent();
         }
 
-        // POST: api/Films
+        // POST: api/Ticket
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Film>> PostFilm(Film film)
+        public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
         {
-            _context.Films.Add(film);
+            _context.Tickets.Add(ticket);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetFilm", new { id = film.ID }, film);
+            return CreatedAtAction("GetTicket", new { id = ticket.ID }, ticket);
         }
 
-        // DELETE: api/Films/5
+        // DELETE: api/Ticket/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Film>> DeleteFilm(int id)
+        public async Task<ActionResult<Ticket>> DeleteTicket(int id)
         {
-            var film = await _context.Films.FindAsync(id);
-            if (film == null)
+            var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            _context.Films.Remove(film);
+            _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
 
-            return film;
+            return ticket;
         }
 
-        private bool FilmExists(int id)
+        private bool TicketExists(int id)
         {
-            return _context.Films.Any(e => e.ID == id);
+            return _context.Tickets.Any(e => e.ID == id);
         }
     }
 }

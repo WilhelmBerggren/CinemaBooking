@@ -12,40 +12,54 @@ namespace Cinema.Data
         {
             context.Database.EnsureCreated();
 
-            if (context.Theaters.Any())
+            if (context.Salons.Any())
             {
                 return;
             }
 
-            context.Seats.Add(new Seat { SeatNumber = 1 });
+            var salons = new Salon[] {
+                new Salon { Name = "Salon 1", Seats = 50 },
+                new Salon { Name = "Salon 2", Seats = 100 }
+            };
+            foreach (var salon in salons)
+            {
+                context.Salons.Add(salon);
+            }
             context.SaveChanges();
 
-            context.Rows.Add(new Row { RowNumber = 1, Seats = new List<Seat>() });
+            var films = new Film[] {
+                new Film { Name = "Slagsmålsklubben", Duration = 90 },
+                new Film { Name = "Läderlappen", Duration = 120 },
+                new Film { Name = "Sällskapsresan", Duration = 144 }
+            };
+
+            foreach (var film in films)
+            {
+                context.Films.Add(film);
+            }
+
             context.SaveChanges();
 
-            context.Salons.Add(new Salon { Name = "Salon 1", Rows = new List<Row>() });
+            var timeSlots = new int[] { 0900, 1300, 1900 };
+            var viewings = new Viewing[]
+            {
+                new Viewing { Film = films[0], Salon = salons[0], Time = timeSlots[0] },
+                new Viewing { Film = films[0], Salon = salons[0], Time = timeSlots[2] },
+                new Viewing { Film = films[1], Salon = salons[1], Time = timeSlots[1] },
+                new Viewing { Film = films[1], Salon = salons[1], Time = timeSlots[2] },
+                new Viewing { Film = films[2], Salon = salons[0], Time = timeSlots[0] }
+            };
+
+            foreach(var viewing in viewings)
+            {
+                context.Viewings.Add(viewing);
+            }
+
             context.SaveChanges();
 
-            context.Theaters.Add(new Theater { Name = "Berras Bio", Salons = new List<Salon>() });
-            context.SaveChanges();
+            context.Tickets.Add(new Ticket { Salon = salons[0], Seat = 1, Viewing = viewings[0]});
+            context.Tickets.Add(new Ticket { Salon = salons[0], Seat = 10, Viewing = viewings[0]});
 
-            context.Films.Add(new Film { Name = "Slagsmålsklubben" });
-            context.SaveChanges();
-
-            context.Viewings.Add(new Viewing { });
-            context.SaveChanges();
-
-            context.Tickets.Add(new Ticket { });
-            context.SaveChanges();
-
-            context.Rows.First().Seats.Add(context.Seats.First());
-            context.Salons.First().Rows.Add(context.Rows.First());
-            context.Theaters.First().Salons.Add(context.Salons.First());
-            context.Tickets.First().Viewing = context.Viewings.First();
-            context.Tickets.First().Row = context.Rows.First();
-            context.Tickets.First().Seat = context.Seats.First();
-            context.Viewings.First().Film = context.Films.First();
-            context.Viewings.First().Salon = context.Salons.First();
             context.SaveChanges();
         }
     }
