@@ -11,5 +11,6 @@ namespace Cinema.Models
         public Film Film { get; set; }
         public Salon Salon { get; set; }
         public int Time { get; set; }
+        public ICollection<Ticket> Tickets { get; set; }
     }
 }

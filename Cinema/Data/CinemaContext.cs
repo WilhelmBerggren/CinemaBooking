@@ -30,8 +30,8 @@ namespace Cinema.Data
             modelBuilder.Entity<Salon>();
             modelBuilder.Entity<Viewing>().HasOne(v => v.Film);
             modelBuilder.Entity<Viewing>().HasOne(v => v.Salon);
+            modelBuilder.Entity<Viewing>().HasMany(v => v.Tickets);
             modelBuilder.Entity<Ticket>().HasOne(t => t.Viewing);
-            modelBuilder.Entity<Ticket>().HasOne(t => t.Salon);
         }
     }
 }

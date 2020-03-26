@@ -45,6 +45,25 @@ namespace Cinema.Controllers
             return viewing;
         }
 
+        // GET: api/Viewing/5/Tickets
+        [HttpGet("{id}/Tickets")]
+        public async Task<ActionResult<IEnumerable<Ticket>>> GetViewingTickets(int id)
+        {
+            var viewing = await _context.Viewings.FindAsync(id);
+
+            if (viewing == null)
+            {
+                return NotFound();
+            }
+
+            var tickets = await _context.Tickets
+                .Where(t => t.Viewing == viewing)
+                .Select(t => new Ticket { ID = t.ID, Seat = t.Seat })
+                .ToArrayAsync();
+
+            return tickets;
+        }
+
         // PUT: api/Viewing/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.

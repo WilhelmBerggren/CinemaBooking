@@ -43,11 +43,11 @@ namespace Cinema.Data
             var timeSlots = new int[] { 0900, 1300, 1900 };
             var viewings = new Viewing[]
             {
-                new Viewing { Film = films[0], Salon = salons[0], Time = timeSlots[0] },
-                new Viewing { Film = films[0], Salon = salons[0], Time = timeSlots[2] },
-                new Viewing { Film = films[1], Salon = salons[1], Time = timeSlots[1] },
-                new Viewing { Film = films[1], Salon = salons[1], Time = timeSlots[2] },
-                new Viewing { Film = films[2], Salon = salons[0], Time = timeSlots[0] }
+                new Viewing { Film = films[0], Salon = salons[0], Time = timeSlots[0], Tickets = new List<Ticket>() },
+                new Viewing { Film = films[0], Salon = salons[0], Time = timeSlots[2], Tickets = new List<Ticket>() },
+                new Viewing { Film = films[1], Salon = salons[1], Time = timeSlots[1], Tickets = new List<Ticket>() },
+                new Viewing { Film = films[1], Salon = salons[1], Time = timeSlots[2], Tickets = new List<Ticket>() },
+                new Viewing { Film = films[2], Salon = salons[0], Time = timeSlots[0], Tickets = new List<Ticket>() }
             };
 
             foreach(var viewing in viewings)
@@ -57,9 +57,30 @@ namespace Cinema.Data
 
             context.SaveChanges();
 
-            context.Tickets.Add(new Ticket { Salon = salons[0], Seat = 1, Viewing = viewings[0]});
-            context.Tickets.Add(new Ticket { Salon = salons[0], Seat = 10, Viewing = viewings[0]});
 
+            var tickets = new List<Ticket>();
+            var random = new Random();
+            foreach(var viewing in viewings)
+            {
+                for(var i = 1; i <= viewing.Salon.Seats; i++)
+                {
+                    if(random.NextDouble() < 0.5)
+                    {
+                        tickets.Add(new Ticket { Seat = i, Viewing = viewing });
+                    }
+                }
+            }
+            
+            foreach (var ticket in tickets)
+            {
+                context.Tickets.Add(ticket);
+            }
+            context.SaveChanges();
+
+            foreach (var ticket in tickets)
+            {
+                context.Viewings.Find(ticket.Viewing).Tickets.Add(ticket);
+            }
             context.SaveChanges();
         }
     }
