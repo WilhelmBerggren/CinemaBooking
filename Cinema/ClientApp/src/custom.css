@@ -12,3 +12,31 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+.picked {
+  color: red;
+}
+
+.unpicked {
+  color: blue;
+}
+
+body, html {
+  width: 100%;
+}
+
+.seatPicker {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.seat {
+  font-size: 1em;
+  width: 2em;
+  height: 2em;
+  padding: 0.1em;
+  text-align: center;
+  border: 1px solid;
+  border-radius: 1em;
+}

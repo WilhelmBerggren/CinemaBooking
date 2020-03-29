@@ -45,9 +45,9 @@ namespace Cinema.Controllers
             return viewing;
         }
 
-        // GET: api/Viewing/5/Tickets
-        [HttpGet("{id}/Tickets")]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetViewingTickets(int id)
+        // GET: api/Viewing/5/Ticket
+        [HttpGet("{id}/Ticket")]
+        public async Task<ActionResult<IEnumerable<Ticket>>> GetViewingTicket(int id)
         {
             var viewing = await _context.Viewings.FindAsync(id);
 
@@ -64,38 +64,6 @@ namespace Cinema.Controllers
             return tickets;
         }
 
-        // PUT: api/Viewing/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutViewing(int id, Viewing viewing)
-        {
-            if (id != viewing.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(viewing).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ViewingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Viewing
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
@@ -106,27 +74,6 @@ namespace Cinema.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetViewing", new { id = viewing.ID }, viewing);
-        }
-
-        // DELETE: api/Viewing/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Viewing>> DeleteViewing(int id)
-        {
-            var viewing = await _context.Viewings.FindAsync(id);
-            if (viewing == null)
-            {
-                return NotFound();
-            }
-
-            _context.Viewings.Remove(viewing);
-            await _context.SaveChangesAsync();
-
-            return viewing;
-        }
-
-        private bool ViewingExists(int id)
-        {
-            return _context.Viewings.Any(e => e.ID == id);
         }
     }
 }

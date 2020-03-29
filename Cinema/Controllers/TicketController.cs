@@ -32,7 +32,8 @@ namespace Cinema.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Ticket>> GetTicket(int id)
         {
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _context.Tickets.Include(t => t.Viewing)
+                .FirstOrDefaultAsync(t => t.ID == id);
 
             if (ticket == null)
             {
@@ -42,45 +43,18 @@ namespace Cinema.Controllers
             return ticket;
         }
 
-        // PUT: api/Ticket/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTicket(int id, Ticket ticket)
-        {
-            if (id != ticket.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(ticket).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TicketExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
         // POST: api/Ticket
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
         {
-            _context.Tickets.Add(ticket);
+            var viewing = await _context.Viewings.FindAsync(ticket.Viewing.ID);
+            var t = new Ticket { Seat = ticket.Seat, Viewing = viewing };
+            _context.Tickets.Add(t);
+            await _context.SaveChangesAsync();
+
+            viewing.Tickets.Add(t);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTicket", new { id = ticket.ID }, ticket);

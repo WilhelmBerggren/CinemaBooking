@@ -17,6 +17,8 @@ namespace Cinema
             Configuration = configuration;
         }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -32,6 +34,8 @@ namespace Cinema
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,9 +44,9 @@ namespace Cinema
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(builder => builder.AllowAnyOrigin());
+                app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-                //app.UseHttpsRedirection();
+                app.UseHttpsRedirection();
             }
             else
             {
