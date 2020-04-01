@@ -61,19 +61,32 @@ namespace Cinema.Controllers
         }
 
         // DELETE: api/Ticket/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Ticket>> DeleteTicket(int id)
-        {
-            var ticket = await _context.Tickets.FindAsync(id);
-            if (ticket == null)
+        [HttpDelete]
+        public async Task<ActionResult<Ticket>> DeleteTicket(Ticket ticket)
+        {        
+            Console.WriteLine(ticket.Seat);
+            Console.WriteLine(ticket.Viewing.ID);
+            var actualViewing = await _context.Viewings.Include(v => v.Tickets).Where(t => t.ID == ticket.Viewing.ID).FirstOrDefaultAsync();
+            var actualTicket = actualViewing.Tickets.Where(t => t.Seat == ticket.Seat).FirstOrDefault();
+
+            if (actualViewing == null)
+            {
+                return NotFound();
+            }
+            if (actualTicket == null)
             {
                 return NotFound();
             }
 
-            _context.Tickets.Remove(ticket);
+            Console.WriteLine(actualTicket.Seat + ' ' + actualViewing.ID);
+
+            actualViewing.Tickets.Remove(actualTicket);
             await _context.SaveChangesAsync();
 
-            return ticket;
+            _context.Tickets.Remove(actualTicket);
+            await _context.SaveChangesAsync();
+
+            return actualTicket;
         }
 
         private bool TicketExists(int id)

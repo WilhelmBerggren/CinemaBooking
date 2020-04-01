@@ -20,6 +20,20 @@ export const BookViewing = ({seatNumber, viewing}) => {
       const json = await response.json()
       setRes(json);
     }
+
+    const deleteTicket = async (event) => {
+      event.preventDefault();
+      console.log("deleting:", JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}}));
+      const response = await fetch(`https://localhost:5001/api/ticket`, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}})
+      });
+      const json = await response.json();
+      setRes(json);
+    }
   
     return (
       <div>
@@ -29,6 +43,10 @@ export const BookViewing = ({seatNumber, viewing}) => {
           <input type="submit" value={`Book seat ${seatNumber}`}/>
         </form>
         {res && <p>Result: {JSON.stringify(res)}</p>}
+        {res && <form onSubmit={deleteTicket}>
+          <input type="hidden" value={seatNumber} name="seat"/>
+          <input type="submit" value={`Unbook seat ${seatNumber}`}/>
+        </form>}
       </div>
     )
   }

@@ -12,7 +12,6 @@ export const ViewingDetails = ({viewing}) => {
   return (
     <div>
       <h1>Viewing details:</h1>
-      <p>Tickets: {tickets && tickets.map(ticket => ticket.seat).sort((a, b) => a - b).join()}</p>
       <p>Available seats: {viewing && tickets && (viewing.salon.seats - tickets.length)}</p>
       {viewing && tickets && <SeatPicker viewing={viewing} tickets={tickets}/>}
     </div>
@@ -32,7 +31,9 @@ export const FilmDetails = ({film}) => {
     <div>
       <h1>Film details:</h1>
       {film && <h2>{film.name}</h2>}
-      {viewings && viewings.map(viewing => <li key={viewing.id} onClick={() => setViewing(viewing)}>{viewing.salon.name} : {viewing.time}</li>)}
+      <div className="row">
+        {viewings && viewings.map(viewing => <div className="item" key={viewing.id} onClick={() => setViewing(viewing)}>{viewing.salon.name} : {viewing.time}</div>)}
+      </div>
       {selectedViewing && <ViewingDetails viewing={selectedViewing}/>}
     </div>
   )
@@ -48,11 +49,11 @@ export const Home = () => {
 
   return (
     <div>
-      <h1>Welcome to Berra's Bio!</h1>
-      <ul>
-        {films && films.map(film => <li key={film.name} onClick={() => setFilm(film)}>{film.name}</li>)}
-        {selectedFilm && <FilmDetails film={selectedFilm} />}
-      </ul>
+      <h1>Welcome to Berra's Bio! Movies:</h1>
+      <div className="row">
+        {films && films.map(film => <div className="item" key={film.name} onClick={() => setFilm(film)}>{film.name}</div>)}
+      </div>
+      {selectedFilm && <FilmDetails film={selectedFilm} />}
     </div>
   )
 }
