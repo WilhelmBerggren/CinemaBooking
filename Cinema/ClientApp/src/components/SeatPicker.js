@@ -1,4 +1,22 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const StyledSalon = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StyledRow = styled.div`
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StyledSeat = styled.button`
+  font-weight: bold;
+`;
 
 export const BookViewing = ({seatNumber, viewing}) => {
     //const [seat, setSeat] = useState(null);
@@ -53,9 +71,9 @@ export const BookViewing = ({seatNumber, viewing}) => {
   
 export const Seat = ({ number, picked, setSeat }) => {
     return (
-        <button onClick={setSeat} className={`seat ${picked ? 'picked' : 'unpicked'}`}>
+        <StyledSeat onClick={setSeat} className={`seat ${picked ? 'picked' : 'unpicked'}`}>
              {number}
-        </button>
+        </StyledSeat>
     )
 }
 
@@ -80,10 +98,12 @@ export const SeatPicker = ({ viewing, tickets }) => {
     console.log("seleced seat: ", selectedSeat);
 
     return (
-        <div className="Salon">
-            {rows.map(row => <Row key={row[0].number} row={row} setSeat={setSeat}/>)}
+        <StyledSalon>
+            {rows.map(row => (<StyledRow>
+                <Row key={row[0].number} row={row} setSeat={setSeat}/>
+            </StyledRow>))}
             {selectedSeat && <BookViewing seatNumber={selectedSeat} viewing={viewing}/>}
-        </div>
+        </StyledSalon>
     );
 }
 

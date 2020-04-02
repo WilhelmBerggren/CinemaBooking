@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchData } from '../helpers';
 import { SeatPicker } from './SeatPicker';
+import { Viewings } from './Viewings';
 
 export const ViewingDetails = ({viewing}) => {
   const [tickets, setTickets] = useState([]);
@@ -40,20 +41,14 @@ export const FilmDetails = ({film}) => {
 }
 
 export const Home = () => {
-  const [films, setFilms] = useState([]);
-  const [selectedFilm, setFilm] = useState(null);
-
-  useEffect(() => {
-    fetchData('https://localhost:5001/api/film', setFilms);
-  }, []);
-
   return (
     <div>
       <h1>Welcome to Berra's Bio! Movies:</h1>
-      <div className="row">
+      <Viewings />
+      {/* <div className="row">
         {films && films.map(film => <div className="item" key={film.name} onClick={() => setFilm(film)}>{film.name}</div>)}
       </div>
-      {selectedFilm && <FilmDetails film={selectedFilm} />}
+      {selectedFilm && <FilmDetails film={selectedFilm} />} */}
     </div>
   )
 }
