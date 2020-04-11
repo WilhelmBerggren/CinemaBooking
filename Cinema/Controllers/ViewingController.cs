@@ -63,17 +63,5 @@ namespace Cinema.Controllers
 
             return tickets;
         }
-
-        // POST: api/Viewing
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public ActionResult<Viewing> PostViewing(Viewing viewing)
-        {
-            _context.Viewings.Add(viewing);
-            _context.SaveChanges();
-
-            return CreatedAtAction("GetViewing", new { id = viewing.ID }, viewing);
-        }
     }
 }

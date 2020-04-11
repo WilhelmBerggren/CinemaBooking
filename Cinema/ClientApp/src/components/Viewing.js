@@ -7,7 +7,7 @@ const StyledViewing = styled.div`
     flex-direction: column;
     padding: 1em;
     margin: 1em 0;
-    border: 1px solid black;
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 `;
 
 const ViewingDetails = styled.div`

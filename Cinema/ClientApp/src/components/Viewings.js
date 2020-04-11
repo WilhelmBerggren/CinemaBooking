@@ -9,7 +9,7 @@ const ViewingsWrapper = styled.div`
 `;
 
 const StyledSelect = styled.div`
-    border: 1px solid black;
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 `;
 
 export const Viewings = () => {

@@ -12,51 +12,61 @@ const StyledRow = styled.div`
   display:flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: normal;
+  width: 100%;
 `;
 
 const StyledSeat = styled.button`
   font-weight: bold;
+  padding: 0;
+  flex-grow: 1;
 `;
 
 export const BookViewing = ({seatNumber, viewing}) => {
     //const [seat, setSeat] = useState(null);
     const [res, setRes] = useState(null);
   
-    const submit = (method) => {
-      fetchData(`api/ticket`, setRes, {
+    const submit = async (method, body) => {
+      await fetchData(`api/ticket`, setRes, {
         method: method,
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}})
+        body: JSON.stringify(body)
       });
+      console.log('res:', res);
     }
-
+    
     const submitTicket = async (event) => {
       event.preventDefault();
-      submit('POST');
+      console.log('body', JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}}));
+      submit('POST', {seat: seatNumber, viewing: {id: viewing.id}});
     }
 
     const deleteTicket = async (event) => {
       event.preventDefault();
-      submit('DELETE');
+      console.log('body:', res);
+      await submit('DELETE', res);
+
+      if(res && res.id) {
+        setRes(null);
+      }
     }
   
     return (
-      <div>
-        <h1>Book ticket:</h1>
-        <form onSubmit={submitTicket}>
+      <>
+        <p>Book ticket:</p>
+        {(res == null) && <form onSubmit={submitTicket}>
           <input type="hidden" value={seatNumber} name="seat"/>
           <input type="submit" value={`Book seat ${seatNumber}`}/>
-        </form>
-        {res && <p>Result: {JSON.stringify(res)}</p>}
-        {res && (
+        </form>}
+        {res && res.id && (
           <form onSubmit={deleteTicket}>
             <input type="hidden" value={seatNumber} name="seat"/>
             <input type="submit" value={`Unbook seat ${seatNumber}`}/>
           </form>)}
-      </div>
+        {res && !res.id && <p>Result: {JSON.stringify(res)}</p>}
+      </>
     )
   }
   
@@ -70,7 +80,7 @@ export const Seat = ({ number, picked, setSeat }) => {
 
 export const Row = ({ row, setSeat }) => {
     return (
-        <div className="row">
+        <>
             {row.map(seat => (
                 <Seat key={seat.number} 
                       number={seat.number} 
@@ -78,7 +88,7 @@ export const Row = ({ row, setSeat }) => {
                       setSeat={() => !seat.picked ? setSeat(seat.number) : null}
                 />
             ))}
-        </div>
+        </>
     )
 }
 
