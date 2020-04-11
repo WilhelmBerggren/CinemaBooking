@@ -23,16 +23,16 @@ namespace Cinema.Controllers
 
         // GET: api/Film
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Film>>> GetFilms()
+        public ActionResult<IEnumerable<Film>> GetFilms()
         {
-            return await _context.Films.ToListAsync();
+            return _context.Films.ToList();
         }
 
         // GET: api/Film/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Film>> GetFilm(int id)
+        public ActionResult<Film> GetFilm(int id)
         {
-            var film = await _context.Films.FindAsync(id);
+            var film = _context.Films.Find(id);
 
             if (film == null)
             {
@@ -44,19 +44,19 @@ namespace Cinema.Controllers
 
         // GET: api/Film/5/Viewings
         [HttpGet("{id}/Viewings")]
-        public async Task<ActionResult<IEnumerable<Viewing>>> GetFilmViewings(int id)
+        public ActionResult<IEnumerable<Viewing>> GetFilmViewings(int id)
         {
-            var film = await _context.Films.FindAsync(id);
+            var film = _context.Films.Find(id);
 
             if (film == null)
             {
                 return NotFound();
             }
 
-            var viewings = await _context.Viewings
+            var viewings = _context.Viewings
                 .Where(v => v.Film == film)
                 .Include(v => v.Salon)
-                .ToArrayAsync();
+                .ToArray();
 
             return viewings;
         }

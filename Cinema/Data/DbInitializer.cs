@@ -10,6 +10,7 @@ namespace Cinema.Data
     {
         public static void Initialize(CinemaContext context)
         {
+            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
             if (context.Salons.Any())
@@ -79,7 +80,7 @@ namespace Cinema.Data
 
             foreach (var ticket in tickets)
             {
-                context.Viewings.Find(ticket.Viewing).Tickets.Add(ticket);
+                context.Viewings.Find(ticket.Viewing.ID).Tickets.Add(ticket);
             }
             context.SaveChanges();
         }

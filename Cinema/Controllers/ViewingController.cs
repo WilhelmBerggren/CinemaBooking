@@ -23,19 +23,19 @@ namespace Cinema.Controllers
 
         // GET: api/Viewing
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Viewing>>> GetViewings()
+        public ActionResult<IEnumerable<Viewing>> GetViewings()
         {
-            return await _context.Viewings
+            return _context.Viewings
                 .Include(v => v.Film)
                 .Include(v => v.Salon)
-                .ToListAsync();
+                .ToList();
         }
 
         // GET: api/Viewing/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Viewing>> GetViewing(int id)
+        public ActionResult<Viewing> GetViewing(int id)
         {
-            var viewing = await _context.Viewings.FindAsync(id);
+            var viewing = _context.Viewings.Find(id);
 
             if (viewing == null)
             {
@@ -47,19 +47,19 @@ namespace Cinema.Controllers
 
         // GET: api/Viewing/5/Ticket
         [HttpGet("{id}/Ticket")]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetViewingTicket(int id)
+        public ActionResult<IEnumerable<Ticket>> GetViewingTicket(int id)
         {
-            var viewing = await _context.Viewings.FindAsync(id);
+            var viewing = _context.Viewings.Find(id);
 
             if (viewing == null)
             {
                 return NotFound();
             }
 
-            var tickets = await _context.Tickets
+            var tickets = _context.Tickets
                 .Where(t => t.Viewing == viewing)
                 .Select(t => new Ticket { ID = t.ID, Seat = t.Seat })
-                .ToArrayAsync();
+                .ToArray();
 
             return tickets;
         }
@@ -68,10 +68,10 @@ namespace Cinema.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Viewing>> PostViewing(Viewing viewing)
+        public ActionResult<Viewing> PostViewing(Viewing viewing)
         {
             _context.Viewings.Add(viewing);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return CreatedAtAction("GetViewing", new { id = viewing.ID }, viewing);
         }

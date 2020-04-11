@@ -23,16 +23,16 @@ namespace Cinema.Controllers
 
         // GET: api/Salon
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Salon>>> GetSalons()
+        public ActionResult<IEnumerable<Salon>> GetSalons()
         {
-            return await _context.Salons.ToListAsync();
+            return _context.Salons.ToList();
         }
 
         // GET: api/Salon/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Salon>> GetSalon(int id)
+        public ActionResult<Salon> GetSalon(int id)
         {
-            var salon = await _context.Salons.FindAsync(id);
+            var salon = _context.Salons.Find(id);
 
             if (salon == null)
             {
@@ -44,19 +44,19 @@ namespace Cinema.Controllers
 
         // GET: api/Salon/5/Viewings
         [HttpGet("{id}/Viewings")]
-        public async Task<ActionResult<IEnumerable<Viewing>>> GetSalonViewings(int id)
+        public ActionResult<IEnumerable<Viewing>> GetSalonViewings(int id)
         {
-            var salon = await _context.Salons.FindAsync(id);
+            var salon = _context.Salons.Find(id);
 
             if (salon == null)
             {
                 return NotFound();
             }
 
-            var viewings = await _context.Viewings
+            var viewings = _context.Viewings
                 .Where(v => v.Salon == salon)
                 .Include(v => v.Salon)
-                .ToArrayAsync();
+                .ToArray();
 
             return viewings;
         }

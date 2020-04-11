@@ -23,17 +23,17 @@ namespace Cinema.Controllers
 
         // GET: api/Ticket
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ticket>>> GetTickets()
+        public ActionResult<IEnumerable<Ticket>> GetTickets()
         {
-            return await _context.Tickets.ToListAsync();
+            return _context.Tickets.ToList();
         }
 
         // GET: api/Ticket/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ticket>> GetTicket(int id)
+        public ActionResult<Ticket> GetTicket(int id)
         {
-            var ticket = await _context.Tickets.Include(t => t.Viewing)
-                .FirstOrDefaultAsync(t => t.ID == id);
+            var ticket = _context.Tickets.Include(t => t.Viewing)
+                .FirstOrDefault(t => t.ID == id);
 
             if (ticket == null)
             {
@@ -44,29 +44,26 @@ namespace Cinema.Controllers
         }
 
         // POST: api/Ticket
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Ticket>> PostTicket(Ticket ticket)
+        public ActionResult<Ticket> PostTicket(Ticket ticket)
         {
-            var viewing = await _context.Viewings.FindAsync(ticket.Viewing.ID);
+            var viewing = _context.Viewings.Find(ticket.Viewing.ID);
             var t = new Ticket { Seat = ticket.Seat, Viewing = viewing };
+            
             _context.Tickets.Add(t);
-            await _context.SaveChangesAsync();
-
+            _context.SaveChanges();
             viewing.Tickets.Add(t);
-            await _context.SaveChangesAsync();
-
+            _context.SaveChanges();
             return CreatedAtAction("GetTicket", new { id = ticket.ID }, ticket);
         }
 
         // DELETE: api/Ticket/5
         [HttpDelete]
-        public async Task<ActionResult<Ticket>> DeleteTicket(Ticket ticket)
+        public ActionResult<Ticket> DeleteTicket(Ticket ticket)
         {        
             Console.WriteLine(ticket.Seat);
             Console.WriteLine(ticket.Viewing.ID);
-            var actualViewing = await _context.Viewings.Include(v => v.Tickets).Where(t => t.ID == ticket.Viewing.ID).FirstOrDefaultAsync();
+            var actualViewing = _context.Viewings.Include(v => v.Tickets).Where(t => t.ID == ticket.Viewing.ID).FirstOrDefault();
             var actualTicket = actualViewing.Tickets.Where(t => t.Seat == ticket.Seat).FirstOrDefault();
 
             if (actualViewing == null)
@@ -81,10 +78,10 @@ namespace Cinema.Controllers
             Console.WriteLine(actualTicket.Seat + ' ' + actualViewing.ID);
 
             actualViewing.Tickets.Remove(actualTicket);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             _context.Tickets.Remove(actualTicket);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return actualTicket;
         }

@@ -7,7 +7,7 @@ export const ViewingDetails = ({viewing}) => {
   const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
-    fetchData(`https://localhost:5001/api/viewing/${viewing.id}/ticket`, setTickets)
+    fetchData(`api/viewing/${viewing.id}/ticket`, setTickets)
   }, [viewing]);
 
   return (
@@ -24,7 +24,7 @@ export const FilmDetails = ({film}) => {
   const [selectedViewing, setViewing] = useState(null);
 
   useEffect(() => {
-    fetchData(`https://localhost:5001/api/film/${film.id}/viewings`, setViewings);
+    fetchData(`api/film/${film.id}/viewings`, setViewings);
     setViewing(null);
   }, [film]);
 
@@ -45,10 +45,6 @@ export const Home = () => {
     <div>
       <h1>Welcome to Berra's Bio! Movies:</h1>
       <Viewings />
-      {/* <div className="row">
-        {films && films.map(film => <div className="item" key={film.name} onClick={() => setFilm(film)}>{film.name}</div>)}
-      </div>
-      {selectedFilm && <FilmDetails film={selectedFilm} />} */}
     </div>
   )
 }

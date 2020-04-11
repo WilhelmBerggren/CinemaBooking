@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { fetchData } from '../helpers';
 import styled from 'styled-components';
 
 const StyledSalon = styled.div`
@@ -22,35 +23,24 @@ export const BookViewing = ({seatNumber, viewing}) => {
     //const [seat, setSeat] = useState(null);
     const [res, setRes] = useState(null);
   
-    console.log("res:", res);
-    console.log("seat: ", seatNumber);
-  
-    const submitTicket = async (event) => {
-      event.preventDefault();
-      console.log("submitting:", JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}}));
-      const response = await fetch(`https://localhost:5001/api/ticket`, {
-        method: 'POST',
+    const submit = (method) => {
+      fetchData(`api/ticket`, setRes, {
+        method: method,
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}})
       });
-      const json = await response.json()
-      setRes(json);
+    }
+
+    const submitTicket = async (event) => {
+      event.preventDefault();
+      submit('POST');
     }
 
     const deleteTicket = async (event) => {
       event.preventDefault();
-      console.log("deleting:", JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}}));
-      const response = await fetch(`https://localhost:5001/api/ticket`, {
-        method: 'DELETE',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({seat: seatNumber, viewing: {id: viewing.id}})
-      });
-      const json = await response.json();
-      setRes(json);
+      submit('DELETE');
     }
   
     return (
@@ -61,10 +51,11 @@ export const BookViewing = ({seatNumber, viewing}) => {
           <input type="submit" value={`Book seat ${seatNumber}`}/>
         </form>
         {res && <p>Result: {JSON.stringify(res)}</p>}
-        {res && <form onSubmit={deleteTicket}>
-          <input type="hidden" value={seatNumber} name="seat"/>
-          <input type="submit" value={`Unbook seat ${seatNumber}`}/>
-        </form>}
+        {res && (
+          <form onSubmit={deleteTicket}>
+            <input type="hidden" value={seatNumber} name="seat"/>
+            <input type="submit" value={`Unbook seat ${seatNumber}`}/>
+          </form>)}
       </div>
     )
   }
@@ -94,13 +85,11 @@ export const Row = ({ row, setSeat }) => {
 export const SeatPicker = ({ viewing, tickets }) => {
     const [selectedSeat, setSeat] = useState(null);
     const rows = getLayout(viewing.salon.seats, tickets);
-    //console.log("rows: ", rows);
-    console.log("seleced seat: ", selectedSeat);
 
     return (
         <StyledSalon>
-            {rows.map(row => (<StyledRow>
-                <Row key={row[0].number} row={row} setSeat={setSeat}/>
+            {rows.map(row => (<StyledRow key={row[0].number}>
+                <Row row={row} setSeat={setSeat}/>
             </StyledRow>))}
             {selectedSeat && <BookViewing seatNumber={selectedSeat} viewing={viewing}/>}
         </StyledSalon>
