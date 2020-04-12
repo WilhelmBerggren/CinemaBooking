@@ -5,10 +5,22 @@ export const Salon = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  margin-left: -0.5em;
+  margin-right: -0.5em;
 `;
 
 export const Seat = styled.button`
   font-weight: bold;
+  background: lightgreen;
+  color:black;
+  padding: 0;
+  flex: 1 1 9.99%;
+`;
+
+export const PickedSeat = styled.button`
+  font-weight: bold;
+  background: grey;
+  color:black;
   padding: 0;
   flex: 1 1 9.99%;
 `;

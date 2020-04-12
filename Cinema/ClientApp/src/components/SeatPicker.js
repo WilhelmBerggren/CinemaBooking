@@ -10,19 +10,18 @@ export const SeatsPreview = ({viewing}) => {
 
   useState(() => {
       (viewing && fetchData(`api/viewing/${viewing.id}/ticket`, setTickets));
-  }, [viewing])
+  }, [viewing, selectedSeat])
   
   return (viewing && tickets && (
       <S.Salon>
-          {[...Array(viewing.salon.seats).keys()].map(n => {
+          {[...Array(viewing.salon.seats).keys()].map(n => { // [0,1,2,...,viewing.salon.seats]
             const seat = {number: n+1, picked: (sortedSeats.indexOf(n+1) === -1) ? 0 : 1};
             return(
-              <S.Seat 
-                key={seat.number} 
-                onClick={() => !seat.picked ? setSeat(seat.number) : null} 
-                className={`seat ${seat.picked ? 'picked' : 'unpicked'}`}>
-                {n+1} 
-              </S.Seat>
+              seat.picked ? 
+                <S.PickedSeat key={n+1} disabled>{n+1}</S.PickedSeat> : 
+                <S.Seat key={n+1} onClick={() => setSeat(n+1)}>
+                  {n+1}
+                </S.Seat>
             )})}
           {selectedSeat && <BookViewing seatNumber={selectedSeat} viewing={viewing}/>}
       </S.Salon>
@@ -33,6 +32,7 @@ export const BookViewing = ({seatNumber, viewing}) => {
   const [res, setRes] = useState(null);
 
   const submit = async (method, body, setData) => {
+    console.log("submitting:", JSON.stringify(body));
     await fetchData('api/ticket', setData, {
       method: method,
       headers: {
@@ -44,6 +44,7 @@ export const BookViewing = ({seatNumber, viewing}) => {
   
   const submitTicket = async (event) => {
     event.preventDefault();
+    console.log({seat: seatNumber, viewing: {id: viewing.id}});
     await submit('POST', {seat: seatNumber, viewing: {id: viewing.id}}, setRes);
   }
 
