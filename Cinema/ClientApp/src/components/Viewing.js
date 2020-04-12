@@ -29,7 +29,6 @@ export const Viewing = ({viewing}) => {
                 <p>{viewing.film && viewing.film.name}</p>
                 <p>{viewing.salon && viewing.salon.name}</p>
                 <p>{viewing.time}</p>
-                <p>{viewing.tickets && viewing.tickets.length}</p>
             </ViewingDetails>
             {isToggled && <SeatsPreview viewing={viewing}/>}
         </StyledViewing>

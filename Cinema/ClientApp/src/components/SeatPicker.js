@@ -4,22 +4,23 @@ import styled from 'styled-components';
 
 const StyledSalon = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
 `;
 
-const StyledRow = styled.div`
-  display:flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: normal;
-  width: 100%;
-`;
+// const StyledRow = styled.div`
+//   display:flex;
+//   flex-direction: row;
+//   justify-content: space-between;
+//   align-items: normal;
+//   width: 100%;
+// `;
 
 const StyledSeat = styled.button`
   font-weight: bold;
   padding: 0;
-  flex-grow: 1;
+  flex: 1 1 9.99%;
 `;
 
 export const BookViewing = ({seatNumber, viewing}) => {
@@ -98,9 +99,15 @@ export const SeatPicker = ({ viewing, tickets }) => {
 
     return (
         <StyledSalon>
-            {rows.map(row => (<StyledRow key={row[0].number}>
+            {/* {rows.map(row => (<StyledRow key={row[0].number}>
                 <Row row={row} setSeat={setSeat}/>
-            </StyledRow>))}
+            </StyledRow>))} */}
+            {rows.map(seat => (
+              <Seat key={seat.number} 
+                      number={seat.number} 
+                      picked={seat.picked} 
+                      setSeat={() => !seat.picked ? setSeat(seat.number) : null}
+                />))}
             {selectedSeat && <BookViewing seatNumber={selectedSeat} viewing={viewing}/>}
         </StyledSalon>
     );
@@ -111,12 +118,13 @@ function getLayout(capacity, tickets) {
   const seats = [...Array(capacity).keys()].map(n => {
       return {number: n+1, picked: (sortedSeats.indexOf(n+1) === -1) ? 0 : 1}
   });
+  return seats;
 
-  const rowSize = ~~(capacity / 5);
-  const rows = Array.from(
-    {length: ~~(capacity / rowSize)}, 
-    (v, i) => seats.slice(i * rowSize, i * rowSize + rowSize)
-  );
+  // const rowSize = ~~(capacity / 5);
+  // const rows = Array.from(
+  //   {length: ~~(capacity / rowSize)}, 
+  //   (v, i) => seats.slice(i * rowSize, i * rowSize + rowSize)
+  // );
 
-  return rows;
+  // return rows;
 }

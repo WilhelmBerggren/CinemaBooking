@@ -1,44 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { fetchData } from '../helpers';
-import { SeatPicker } from './SeatPicker';
+import React from 'react';
+// import { useState, useEffect } from 'react';
+// import { fetchData } from '../helpers';
+// import { SeatPicker } from './SeatPicker';
 import { Viewings } from './Viewings';
 
-export const ViewingDetails = ({viewing}) => {
-  const [tickets, setTickets] = useState([]);
+// export const ViewingDetails = ({viewing}) => {
+//   const [tickets, setTickets] = useState([]);
 
-  useEffect(() => {
-    fetchData(`api/viewing/${viewing.id}/ticket`, setTickets)
-  }, [viewing]);
+//   useEffect(() => {
+//     fetchData(`api/viewing/${viewing.id}/ticket`, setTickets)
+//   }, [viewing]);
 
-  return (
-    <div>
-      <h1>Viewing details:</h1>
-      <p>Available seats: {viewing && tickets && (viewing.salon.seats - tickets.length)}</p>
-      {viewing && tickets && <SeatPicker viewing={viewing} tickets={tickets}/>}
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <h1>Viewing details:</h1>
+//       <p>Available seats: {viewing && tickets && (viewing.salon.seats - tickets.length)}</p>
+//       {viewing && tickets && <SeatPicker viewing={viewing} tickets={tickets}/>}
+//     </div>
+//   )
+// }
 
-export const FilmDetails = ({film}) => {
-  const [viewings, setViewings] = useState([]);
-  const [selectedViewing, setViewing] = useState(null);
+// export const FilmDetails = ({film}) => {
+//   const [viewings, setViewings] = useState([]);
+//   const [selectedViewing, setViewing] = useState(null);
 
-  useEffect(() => {
-    fetchData(`api/film/${film.id}/viewings`, setViewings);
-    setViewing(null);
-  }, [film]);
+//   useEffect(() => {
+//     fetchData(`api/film/${film.id}/viewings`, setViewings);
+//     setViewing(null);
+//   }, [film]);
 
-  return (
-    <div>
-      <h1>Film details:</h1>
-      {film && <h2>{film.name}</h2>}
-      <div className="row">
-        {viewings && viewings.map(viewing => <div className="item" key={viewing.id} onClick={() => setViewing(viewing)}>{viewing.salon.name} : {viewing.time}</div>)}
-      </div>
-      {selectedViewing && <ViewingDetails viewing={selectedViewing}/>}
-    </div>
-  )
-}
+//   return (
+//     <div>
+//       <h1>Film details:</h1>
+//       {film && <h2>{film.name}</h2>}
+//       <div className="row">
+//         {viewings && viewings.map(viewing => <div className="item" key={viewing.id} onClick={() => setViewing(viewing)}>{viewing.salon.name} : {viewing.time}</div>)}
+//       </div>
+//       {selectedViewing && <ViewingDetails viewing={selectedViewing}/>}
+//     </div>
+//   )
+// }
 
 export const Home = () => {
   return (
