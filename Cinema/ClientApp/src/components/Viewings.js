@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { fetchData } from '../helpers';
-import styled from 'styled-components';
-import { Viewing } from './Viewing';
-
-const ViewingsWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
-
-const StyledSelect = styled.div`
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-`;
+import { fetchData } from './helpers';
+import { SeatsPreview } from './SeatPicker';
+import * as S from './Styles';
 
 export const Viewings = () => {
     const [viewings, setViewings] = useState(null);
@@ -27,8 +18,8 @@ export const Viewings = () => {
     }, [orderBy]);
 
     return (
-        <ViewingsWrapper>
-            <StyledSelect>
+        <S.ViewingsWrapper>
+            <S.Select>
                 <label>
                     Order by: &nbsp;&nbsp;&nbsp;
                 </label>
@@ -37,10 +28,27 @@ export const Viewings = () => {
                     <option value='movie'>Movie</option>
                     <option value='salon'>Salon</option>
                 </select>
-            </StyledSelect>
+            </S.Select>
             {viewings && viewings.sort(sortings[orderBy]).map(v => (
                 <Viewing key={v.id} viewing={v} />
             ))}
-        </ViewingsWrapper>
+        </S.ViewingsWrapper>
     )
+}
+
+export const Viewing = ({viewing}) => {
+    const [isToggled, setToggled] = useState(false);
+    const toggle = () => setToggled(!isToggled);
+
+    return ( 
+        viewing.film &&
+        <S.Viewing>
+            <S.ViewingDetails onClick={toggle}>
+                <p>{viewing.film && viewing.film.name}</p>
+                <p>{viewing.salon && viewing.salon.name}</p>
+                <p>{viewing.time}</p>
+            </S.ViewingDetails>
+            {isToggled && <SeatsPreview viewing={viewing}/>}
+        </S.Viewing>
+    );
 }
