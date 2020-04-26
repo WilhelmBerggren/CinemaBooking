@@ -10,6 +10,7 @@ export default class App extends Component {
   render () {
     return (
       <Container>
+        <p></p>
         <h1>Welcome to Berra's Bio!</h1>
         <Viewings />
       </Container>

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Cinema.Data;
 using Cinema.Models;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Cinema.Controllers
 {
@@ -38,34 +37,57 @@ namespace Cinema.Controllers
 
         // POST: api/Ticket
         [HttpPost]
-        public ActionResult<Ticket> PostTicket(Ticket ticket)
+        public ActionResult<Ticket> PostTickets(IEnumerable<Ticket> tickets)
         {
-            if (!_context.Viewings.Any(v => v.ID == ticket.Viewing.ID)) return NotFound();
-            if (_context.Tickets.Any(t => t.Seat == ticket.Seat && t.Viewing.ID == ticket.Viewing.ID))
-                return StatusCode(409); //already exists
+            tickets = tickets.Distinct().ToList();
 
-            var viewing = _context.Viewings.Find(ticket.Viewing.ID);
+            if (tickets.Count() < 1 || tickets.Count() > 12) 
+                return StatusCode(StatusCodes.Status422UnprocessableEntity);
+            
+            var viewing = _context.Viewings
+                .Where(v => v.ID == tickets.ElementAt(0).Viewing.ID)
+                .Include(v => v.Salon)
+                .Include(v => v.Film)
+                .FirstOrDefault();
 
-            var saved = _context.Tickets.Add(new Ticket { Seat = ticket.Seat, Viewing = viewing });
+            if (viewing == null) 
+                return NotFound();
+            
+            if (tickets.Any(t => (t.Seat < 1 || t.Seat > viewing.Salon.Seats))) 
+                return StatusCode(StatusCodes.Status422UnprocessableEntity);
+
+            var viewingTickets = _context.Tickets.Where(t => t.Viewing.ID == viewing.ID);
+            if (tickets.Any(t => viewingTickets.Any(vt => vt.Seat == t.Seat))) 
+                return StatusCode(StatusCodes.Status409Conflict);
+
+            var entities = tickets.Select(t => new Ticket { Seat = t.Seat, Viewing = viewing }).ToArray();
+            var response = new List<EntityEntry<Ticket>>();
+            foreach(Ticket t in entities)
+                response.Add(_context.Tickets.Add(new Ticket { Seat = t.Seat, Viewing = _context.Viewings.Find(viewing.ID) }));
+
             _context.SaveChanges();
 
-            return CreatedAtAction("GetTicket", new Ticket { 
-                ID = saved.Entity.ID, 
-                Seat = saved.Entity.Seat, 
-                Viewing = new Viewing { ID = saved.Entity.Viewing.ID } 
-            });
+            return CreatedAtAction("GetTicket", response.Select(e => new Ticket {
+                ID = e.Entity.ID,
+                Seat = e.Entity.Seat,
+                Viewing = new Viewing { ID = e.Entity.Viewing.ID } 
+            }));
         }
 
         // DELETE: api/Ticket/5
         [HttpDelete]
-        public ActionResult<Ticket> DeleteTicket(Ticket ticket)
+        public ActionResult<Ticket> DeleteTickets(IEnumerable<Ticket> tickets)
         {
-            if (!TicketExists(ticket.ID)) return NotFound();
+            var response = new List<EntityEntry<Ticket>>();
+            foreach(Ticket t in tickets)
+            {
+                if (!TicketExists(t.ID)) return NotFound();
+                response.Add(_context.Tickets.Remove(_context.Tickets.Find(t.ID)));
+            }
 
-            _context.Tickets.Remove(_context.Tickets.Find(ticket.ID));
             _context.SaveChanges();
-
-            return ticket;
+            
+            return Ok(tickets);
         }
 
         private bool TicketExists(int id)

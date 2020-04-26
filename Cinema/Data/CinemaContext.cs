@@ -1,9 +1,4 @@
-﻿using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using Cinema.Models;
 
 namespace Cinema.Data
@@ -18,26 +13,12 @@ namespace Cinema.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Viewing> Viewings { get; set; }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
-        //    optionsBuilder.EnableSensitiveDataLogging();
-        //}
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Film>().ToTable("Film");
             modelBuilder.Entity<Salon>().ToTable("Salon");
             modelBuilder.Entity<Ticket>().ToTable("Ticket");
             modelBuilder.Entity<Viewing>().ToTable("Viewing");
-
-            //    //modelBuilder.Entity<Film>();
-            //    //modelBuilder.Entity<Salon>();
-            //    //modelBuilder.Entity<Viewing>().HasOne(v => v.Film);
-            //    //modelBuilder.Entity<Viewing>().HasOne(v => v.Salon);
-            //    //modelBuilder.Entity<Viewing>().HasMany(v => v.Tickets);
-            //    //modelBuilder.Entity<Ticket>().HasOne(t => t.Viewing);
-            //}
         }
     }
 }

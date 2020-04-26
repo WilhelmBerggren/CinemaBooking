@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Cinema.Data;
@@ -28,7 +25,17 @@ namespace Cinema.Controllers
             return _context.Viewings
                 .Include(v => v.Film)
                 .Include(v => v.Salon)
-                .ToList();
+                .Include(v => v.Tickets)
+                .Select(v => new Viewing {
+                    ID = v.ID, 
+                    Film = v.Film, 
+                    Time = v.Time,
+                    Salon = v.Salon, 
+                    Tickets = v.Tickets.Select(t => new Ticket { 
+                        ID = t.ID, 
+                        Seat = t.Seat
+                    }).ToList(), 
+                }).ToList();
         }
 
         // GET: api/Viewing/5

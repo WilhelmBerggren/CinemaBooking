@@ -17,6 +17,14 @@ export const Seat = styled.button`
   flex: 1 1 9.99%;
 `;
 
+export const PendingSeat = styled.button`
+  font-weight: bold;
+  background: lightblue;
+  color:black;
+  padding: 0;
+  flex: 1 1 9.99%;
+`;
+
 export const PickedSeat = styled.button`
   font-weight: bold;
   background: grey;
@@ -28,16 +36,17 @@ export const PickedSeat = styled.button`
 export const Viewing = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 1em;
     margin: 1em 0;
     box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 `;
 
 export const ViewingDetails = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    /* justify-content: space-between; */
     > p {
-        margin: 1em;
+        margin: 0.5em;
+        /* flex: 1; */
     }
 `;
 
